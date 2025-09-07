@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <button v-on:click="updatePost">Mettre à jour</button>
+        <button v-on:click="createPost">Créer un post</button>
+        <ul>
+            <li v-for="post in posts">{{ post.title }}</li>
+        </ul>
+
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    posts: []
+                }
+            },
+            methods: {
+                updatePost() {
+                    //this.posts = ['post 4', 'post 5']
+                    axios.get('https://jsonplaceholder.typicode.com/posts').then(Response => this.posts = Response.data).catch(erreur => this.posts = [{ title: 'Erreur de chargement...' }]
+                    );
+                },
+                createPost() {
+                    axios.post('https://jsonplaceholder.typicode.com/posts', {
+                        id: 101,
+                        title: 'foo',
+                        body: 'bar',
+                        userId: 1
+                    }).then(response => {
+                        console.log('Réponse API :', response.data);
+                        //ajouter du nouveau post directement dans le tableau
+                        this.posts.unshift(response.data);
+                    });
+                }
+            }
+
+        });
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
